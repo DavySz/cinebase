@@ -21,3 +21,7 @@ export type TGetPopularMoviesResponse = {
   total_results: number;
   results: TGetPopularMoviesResults[];
 };
+
+export interface IGetPopularMovies {
+  page: number;
+}
