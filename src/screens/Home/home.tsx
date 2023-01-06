@@ -34,6 +34,7 @@ export function Home() {
   }
 
   async function loadMoreData() {
+    setFooterListState("loading");
     const { total_pages } = popularMovies;
     if (page === total_pages) {
       setFooterListState("ready");
