@@ -1,36 +1,33 @@
 import { IMDB_IMAGES_BASE_URL } from "@env";
 import React from "react";
-import { Container, ImageWrapper } from "./movieCard.styles";
+import { Container, ImageWrapper, Header, Footer } from "./movieCard.styles";
 import { IMovieCard } from "./movieCard.types";
-import { Entypo } from "@expo/vector-icons";
-import { View } from "react-native";
-import { useTheme } from "styled-components/native";
 import { Text } from "../Text/text";
 
-export function MovieCard({ imagePath, title }: IMovieCard) {
-  const theme = useTheme();
-
+export function MovieCard({ imagePath, title, overview }: IMovieCard) {
   return (
     <Container style={{ elevation: 2 }}>
-      <View style={{ flexDirection: "row" }}>
-        <ImageWrapper source={{ uri: `${IMDB_IMAGES_BASE_URL}${imagePath}` }} />
-        <View>
-          <Entypo name="star" size={24} color={theme.colors.start_icon} />
-          <Entypo name="star" size={24} color={theme.colors.start_icon} />
-          <Entypo name="star" size={24} color={theme.colors.start_icon} />
-          <Entypo name="star" size={24} color={theme.colors.start_icon} />
-          <Entypo
-            name="star-outlined"
-            size={24}
-            color={theme.colors.start_icon}
-          />
-        </View>
-      </View>
-      <View style={{ flex: 1, padding: 8 }}>
-        <Text size="20" color="background_primary" font="secondary_600">
+      <Header>
+        <Text
+          color="background_primary"
+          font="secondary_600"
+          numberOfLines={1}
+          size="16"
+        >
           {title}
         </Text>
-      </View>
+      </Header>
+      <ImageWrapper source={{ uri: `${IMDB_IMAGES_BASE_URL}${imagePath}` }} />
+      <Footer>
+        <Text
+          color="background_primary"
+          font="primary_400"
+          numberOfLines={1}
+          size="12"
+        >
+          {overview}
+        </Text>
+      </Footer>
     </Container>
   );
 }
