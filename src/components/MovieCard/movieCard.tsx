@@ -6,8 +6,12 @@ import { Text } from "../Text/text";
 
 export function MovieCard({ imagePath, title, overview }: IMovieCard) {
   return (
-    <Container style={{ elevation: 2 }}>
-      <Header>
+    <Container>
+      <ImageWrapper
+        source={{ uri: `${IMDB_IMAGES_BASE_URL}${imagePath}` }}
+        borderRadius={8}
+      />
+      <Footer>
         <Text
           color="background_primary"
           font="secondary_600"
@@ -16,9 +20,6 @@ export function MovieCard({ imagePath, title, overview }: IMovieCard) {
         >
           {title}
         </Text>
-      </Header>
-      <ImageWrapper source={{ uri: `${IMDB_IMAGES_BASE_URL}${imagePath}` }} />
-      <Footer>
         <Text
           color="background_primary"
           font="primary_400"
