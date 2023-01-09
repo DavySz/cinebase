@@ -1,6 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { FlatList, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  FlatList,
+  Keyboard,
+  RefreshControl,
+  TextInput,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Input } from "../../components/Input/input";
 import MovieCard from "../../components/MovieCard/movieCard";
 import { EmptyState } from "../../components/ScreenState/EmptyState/emptyState";
@@ -14,10 +20,21 @@ import { TGetPopularMoviesResponse } from "../../services/imdb/movies/movies.typ
 import { getSearchMovie } from "../../services/imdb/search/search";
 import { FooterList } from "./FooterList/footerList";
 import { TFooterListState } from "./FooterList/footerList.types";
-import { CardWrapper, Container, Separator } from "./home.styles";
+import {
+  CardWrapper,
+  Container,
+  IconWrapper,
+  Row,
+  Separator,
+} from "./home.styles";
+import { AntDesign } from "@expo/vector-icons";
+import { useTheme } from "styled-components/native";
+import { createRef } from "react";
 
 export function Home() {
   const { navigate } = useNavigation();
+  const theme = useTheme();
+  const inputRef = createRef<TextInput>();
   const [movies, setMovies] = useState<TGetPopularMoviesResponse>(
     {} as TGetPopularMoviesResponse
   );
@@ -26,7 +43,7 @@ export function Home() {
     "",
     500
   );
-
+  const [refreshingList, setRefreshingList] = useState(false);
   const [screenState, setScreenState] = useState<TScreenState>("loading");
   const [footerListState, setFooterListState] =
     useState<TFooterListState>("loading");
@@ -36,6 +53,7 @@ export function Home() {
     let response: TGetPopularMoviesResponse = {} as TGetPopularMoviesResponse;
 
     try {
+      setRefreshingList(false);
       setScreenState("loading");
       if (search) {
         response = await getSearchMovie({
@@ -45,6 +63,7 @@ export function Home() {
       } else {
         response = await getPopularMovies(1);
       }
+
       setMovies(response);
       setPage((previous) => previous + 1);
 
@@ -91,6 +110,11 @@ export function Home() {
     }
   }
 
+  function cleanInput() {
+    setSearch("");
+    inputRef.current?.setNativeProps({ text: "" });
+  }
+
   useEffect(() => {
     loadMovies();
   }, [debouncedSearch]);
@@ -99,11 +123,22 @@ export function Home() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScreenTemplate>
         <Container>
-          <Input
-            placeholder="Buscar filme..."
-            onChangeText={setSearch}
-            mb={16}
-          />
+          <Row mb={16}>
+            <Input
+              placeholder="Buscar filme..."
+              onChangeText={setSearch}
+              ref={inputRef}
+            />
+            {search && (
+              <IconWrapper onPress={() => cleanInput()}>
+                <AntDesign
+                  name="close"
+                  size={12}
+                  color={theme.colors.background_primary}
+                />
+              </IconWrapper>
+            )}
+          </Row>
           <ScreenState
             errorRecoveryCallback={() => loadMoreMovies()}
             screenState={screenState}
@@ -143,6 +178,12 @@ export function Home() {
                   <FooterList
                     footerState={footerListState}
                     errorRecoveryCallback={() => loadMoreMovies()}
+                  />
+                }
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshingList}
+                    onRefresh={() => loadMovies()}
                   />
                 }
               />

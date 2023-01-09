@@ -5,6 +5,9 @@ export declare global {
       MovieDetails: {
         id: number;
       };
+      Actors: {
+        id: number;
+      };
     }
   }
 }

@@ -3,9 +3,13 @@ import { useTheme } from "styled-components/native";
 import { Container } from "./input.styles";
 import { IInput } from "./input.types";
 
-export function Input({ ...rest }: IInput) {
+export const Input = React.forwardRef(({ ...rest }: IInput, ref: any) => {
   const { colors } = useTheme();
   return (
-    <Container {...rest} placeholderTextColor={colors.background_primary} />
+    <Container
+      {...rest}
+      ref={ref}
+      placeholderTextColor={colors.background_primary}
+    />
   );
-}
+});

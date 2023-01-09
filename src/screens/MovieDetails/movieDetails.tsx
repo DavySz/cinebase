@@ -1,5 +1,5 @@
 import { IMDB_IMAGES_BASE_URL } from "@env";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ScreenTemplate } from "../../components/ScreenTemplate/screenTemplate";
 import { getMovie } from "../../services/imdb/movies/movies";
@@ -23,9 +23,11 @@ import { InfoCard } from "./InfoCard/infoCard";
 import { Chip } from "../../components/Chip/Chip";
 import { ScreenState } from "../../components/ScreenState/screenState";
 import { TScreenState } from "../../components/ScreenState/ScreenState.types";
+import { Button } from "../../components/Button/button";
 
 export function MovieDetails() {
   const { colors } = useTheme();
+  const { navigate } = useNavigation();
   const { id } = useRoute().params as TRouteParams;
   const [screenState, setScreenState] = useState<TScreenState>("loading");
   const [movie, setMovie] = useState<TGetMovieResponse>(
@@ -151,6 +153,18 @@ export function MovieDetails() {
             <InfoCard
               icon={<Entypo name="ticket" size={32} color={colors.main} />}
               info={formatToBRL(movie.revenue)}
+            />
+            <Button
+              label="Ver atores"
+              variant="secondary"
+              icon={
+                <MaterialIcons
+                  size={24}
+                  name="chevron-right"
+                  color={colors.background_primary}
+                />
+              }
+              onPress={() => navigate("Actors", { id })}
             />
           </Content>
         </Container>
