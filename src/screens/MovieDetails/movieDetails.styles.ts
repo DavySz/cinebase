@@ -11,6 +11,7 @@ export const Container = styled.ScrollView.attrs({
   contentContainerStyle: {
     paddingBottom: 24,
   },
+  showsVerticalScrollIndicator: false,
 })`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.shape_dark};
