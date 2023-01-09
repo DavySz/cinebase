@@ -4,7 +4,7 @@ import { Container, ImageWrapper, Header, Footer } from "./movieCard.styles";
 import { IMovieCard } from "./movieCard.types";
 import { Text } from "../Text/text";
 
-export function MovieCard({ imagePath, title, overview }: IMovieCard) {
+function MovieCard({ imagePath, title, overview }: IMovieCard) {
   return (
     <Container>
       <ImageWrapper
@@ -32,3 +32,5 @@ export function MovieCard({ imagePath, title, overview }: IMovieCard) {
     </Container>
   );
 }
+
+export default React.memo(MovieCard);
