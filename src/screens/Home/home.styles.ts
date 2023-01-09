@@ -11,3 +11,7 @@ export const Container = styled.View`
 export const Separator = styled.View`
   height: 24px;
 `;
+
+export const CardWrapper = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+})``;

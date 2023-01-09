@@ -1,19 +1,30 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { FlatList, Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Button } from "../../components/Button/button";
 import { Input } from "../../components/Input/input";
-import { MovieCard } from "../../components/MovieCard/movieCard";
+import MovieCard from "../../components/MovieCard/movieCard";
+import { EmptyState } from "../../components/ScreenState/EmptyState/emptyState";
+import { ScreenState } from "../../components/ScreenState/screenState";
+import { TScreenState } from "../../components/ScreenState/ScreenState.types";
 import { ScreenTemplate } from "../../components/ScreenTemplate/screenTemplate";
-import { TScreenState } from "../../components/ScreenTemplate/screenTemplate.types";
-import { getPopularMovies } from "../../services/imdb/movies/imdbMovies";
-import { TGetPopularMoviesResponse } from "../../services/imdb/movies/imdbMovies.types";
+import { Text } from "../../components/Text/text";
+import { useDebounceState } from "../../hooks/useDebounceState/useDebounceState";
+import { getPopularMovies } from "../../services/imdb/movies/movies";
+import { TGetPopularMoviesResponse } from "../../services/imdb/movies/movies.types";
+import { getSearchMovie } from "../../services/imdb/search/search";
 import { FooterList } from "./FooterList/footerList";
 import { TFooterListState } from "./FooterList/footerList.types";
-import { Container, Separator } from "./home.styles";
+import { CardWrapper, Container, Separator } from "./home.styles";
 
 export function Home() {
-  const [popularMovies, setPopularMovies] = useState<TGetPopularMoviesResponse>(
+  const { navigate } = useNavigation();
+  const [movies, setMovies] = useState<TGetPopularMoviesResponse>(
     {} as TGetPopularMoviesResponse
+  );
+
+  const [search, setSearch, debouncedSearch] = useDebounceState<string>(
+    "",
+    500
   );
 
   const [screenState, setScreenState] = useState<TScreenState>("loading");
@@ -21,31 +32,59 @@ export function Home() {
     useState<TFooterListState>("loading");
   const [page, setPage] = useState(1);
 
-  async function loadData() {
+  async function loadMovies() {
+    let response: TGetPopularMoviesResponse = {} as TGetPopularMoviesResponse;
+
     try {
       setScreenState("loading");
-      const response = await getPopularMovies({ page });
-      setPopularMovies(response);
+      if (search) {
+        response = await getSearchMovie({
+          page: 1,
+          search,
+        });
+      } else {
+        response = await getPopularMovies(1);
+      }
+      setMovies(response);
       setPage((previous) => previous + 1);
-      setScreenState("ready");
+
+      if (response.results.length > 0) {
+        setScreenState("ready");
+      } else {
+        setScreenState("empty");
+      }
     } catch {
       setScreenState("error");
     }
   }
 
-  async function loadMoreData() {
+  async function loadMoreMovies() {
+    let response: TGetPopularMoviesResponse = {} as TGetPopularMoviesResponse;
+
     setFooterListState("loading");
-    const { total_pages } = popularMovies;
+    const { total_pages } = movies;
+
     if (page === total_pages) {
       setFooterListState("ready");
       return;
     }
+
     try {
-      const response = await getPopularMovies({ page });
-      setPopularMovies((previous) => ({
+      if (search) {
+        response = await getSearchMovie({
+          page,
+          search,
+        });
+      } else {
+        response = await getPopularMovies(page);
+      }
+
+      setMovies((previous) => ({
         ...previous,
+        total_pages: response.total_pages,
         results: [...previous.results, ...response.results],
       }));
+
       setPage((previous) => previous + 1);
     } catch {
       setFooterListState("error");
@@ -53,38 +92,63 @@ export function Home() {
   }
 
   useEffect(() => {
-    loadData();
-  }, []);
+    loadMovies();
+  }, [debouncedSearch]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScreenTemplate
-        screenState={screenState}
-        errorRecoveryCallback={() => loadData()}
-      >
+      <ScreenTemplate>
         <Container>
-          <Input placeholder="Buscar filme..." mb={16} />
-          <FlatList
-            data={popularMovies.results}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => (
-              <MovieCard
-                imagePath={item.poster_path}
-                title={item.original_title}
-                overview={item.overview}
+          <Input
+            placeholder="Buscar filme..."
+            onChangeText={setSearch}
+            mb={16}
+          />
+          <ScreenState
+            errorRecoveryCallback={() => loadMoreMovies()}
+            screenState={screenState}
+          >
+            {screenState === "ready" && (
+              <FlatList
+                data={movies.results}
+                keyExtractor={(item) => String(item.id)}
+                renderItem={({ item, index }) => (
+                  <>
+                    {index === 0 && !search && (
+                      <Text
+                        color="background_primary"
+                        font="secondary_600"
+                        size="20"
+                        mb={24}
+                      >
+                        Populares do momento:
+                      </Text>
+                    )}
+                    <CardWrapper
+                      onPress={() => navigate("MovieDetails", { id: item.id })}
+                    >
+                      <MovieCard
+                        imagePath={item.poster_path}
+                        title={item.title}
+                        overview={item.overview}
+                      />
+                    </CardWrapper>
+                  </>
+                )}
+                ItemSeparatorComponent={() => <Separator />}
+                showsVerticalScrollIndicator={false}
+                onEndReached={() => loadMoreMovies()}
+                onEndReachedThreshold={0.5}
+                ListFooterComponent={
+                  <FooterList
+                    footerState={footerListState}
+                    errorRecoveryCallback={() => loadMoreMovies()}
+                  />
+                }
               />
             )}
-            ItemSeparatorComponent={() => <Separator />}
-            showsVerticalScrollIndicator={false}
-            onEndReached={() => loadMoreData()}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={
-              <FooterList
-                footerState={footerListState}
-                errorRecoveryCallback={() => loadMoreData()}
-              />
-            }
-          />
+          </ScreenState>
+          {screenState === "empty" && <EmptyState />}
         </Container>
       </ScreenTemplate>
     </TouchableWithoutFeedback>

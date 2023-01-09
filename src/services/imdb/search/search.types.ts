@@ -1,4 +1,9 @@
-export type TGetPopularMoviesResults = {
+export interface IGetSearchMovie {
+  page: number;
+  search: string;
+}
+
+export type TGetSearchMoviesResults = {
   adult: boolean;
   backdrop_path: string;
   genre_ids: number[];
@@ -15,13 +20,9 @@ export type TGetPopularMoviesResults = {
   vote_count: number;
 };
 
-export type TGetPopularMoviesResponse = {
+export type TGetSearchMoviesResponse = {
   page: number;
   total_pages: number;
   total_results: number;
-  results: TGetPopularMoviesResults[];
+  results: TGetSearchMoviesResults[];
 };
-
-export interface IGetPopularMovies {
-  page: number;
-}
