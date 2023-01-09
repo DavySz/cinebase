@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Actors } from "../screens/Actors/actors";
 import { Home } from "../screens/Home/home";
 import { MovieDetails } from "../screens/MovieDetails/movieDetails";
 
@@ -9,6 +10,7 @@ export function StackRoutes() {
     <Navigator screenOptions={{ headerShown: false }}>
       <Screen name="Home" component={Home} />
       <Screen name="MovieDetails" component={MovieDetails} />
+      <Screen name="Actors" component={Actors} />
     </Navigator>
   );
 }
