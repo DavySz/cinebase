@@ -14,4 +14,6 @@ export const Container = styled.ActivityIndicator<ILoading>`
 
       background-color: ${({ theme }) => theme.colors.shape_dark};
     `}
+
+  height: 300px;
 `;
