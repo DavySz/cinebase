@@ -63,3 +63,7 @@ export const MovieOverview = styled(Text)`
   text-align: justify;
   line-height: 21px;
 `;
+
+export const TabScreen = styled.View`
+  margin-top: 24px;
+`;

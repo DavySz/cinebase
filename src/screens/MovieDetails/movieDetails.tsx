@@ -11,8 +11,9 @@ import {
   ImageWrapper,
   MovieOverview,
   Row,
+  TabScreen,
 } from "./movieDetails.styles";
-import { TRouteParams } from "./movieDetails.types";
+import { TRouteParams, TTabStatus } from "./movieDetails.types";
 import { Entypo } from "@expo/vector-icons";
 import { useTheme } from "styled-components/native";
 import { Text } from "../../components/Text/text";
@@ -24,11 +25,15 @@ import { Chip } from "../../components/Chip/Chip";
 import { ScreenState } from "../../components/ScreenState/screenState";
 import { TScreenState } from "../../components/ScreenState/ScreenState.types";
 import { Button } from "../../components/Button/button";
+import { Tabs } from "../../components/Tabs/tabs";
+import { Recommendations } from "./Recommendations/recommendations";
+import { Similar } from "./Similar/similar";
 
 export function MovieDetails() {
   const { colors } = useTheme();
   const { navigate } = useNavigation();
   const { id } = useRoute().params as TRouteParams;
+  const [tabStatus, setTabStatus] = useState<TTabStatus>("recommendations");
   const [screenState, setScreenState] = useState<TScreenState>("loading");
   const [movie, setMovie] = useState<TGetMovieResponse>(
     {} as TGetMovieResponse
@@ -157,6 +162,7 @@ export function MovieDetails() {
             <Button
               label="Ver atores"
               variant="secondary"
+              mb={24}
               icon={
                 <MaterialIcons
                   size={24}
@@ -166,6 +172,31 @@ export function MovieDetails() {
               }
               onPress={() => navigate("Actors", { id })}
             />
+            <Tabs
+              options={[
+                {
+                  id: "recommendations",
+                  label: "RECOMENDAÇÕES",
+                },
+                {
+                  id: "similar",
+                  label: "SIMILARES",
+                },
+              ]}
+              onChange={(value: TTabStatus) => setTabStatus(value)}
+              value={tabStatus}
+            />
+            <TabScreen>
+              {tabStatus === "recommendations" && (
+                <Recommendations
+                  id={movie.id}
+                  isFocus={tabStatus === "recommendations"}
+                />
+              )}
+              {tabStatus === "similar" && (
+                <Similar id={movie.id} isFocus={tabStatus === "similar"} />
+              )}
+            </TabScreen>
           </Content>
         </Container>
       </ScreenState>
