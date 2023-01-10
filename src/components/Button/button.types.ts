@@ -6,4 +6,5 @@ export interface IButton extends TouchableOpacityProps {
   label: string;
   variant?: TVariant;
   icon?: ReactNode;
+  mb?: number;
 }
