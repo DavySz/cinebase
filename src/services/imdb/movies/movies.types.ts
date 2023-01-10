@@ -79,3 +79,61 @@ export type TGetMovieCreditsResponse = {
     order: number;
   }[];
 };
+
+export interface IGetMovieRecommendations {
+  page: number;
+  id: number;
+}
+
+export type TGetRecommendationsMoviesResults = {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+};
+
+export type TGetRecommendationsMoviesResponse = {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: TGetRecommendationsMoviesResults[];
+};
+
+export interface IGetMovieSimilar {
+  page: number;
+  id: number;
+}
+
+export type TGetSimilarMoviesResults = {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+};
+
+export type TGetSimilarMoviesResponse = {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: TGetRecommendationsMoviesResults[];
+};

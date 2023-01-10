@@ -3,7 +3,11 @@ import { imdb_movies_api } from "../../../config/axios/imdb/movies";
 import {
   TGetMovieResponse,
   TGetMovieCreditsResponse,
+  IGetMovieRecommendations,
   TGetPopularMoviesResponse,
+  TGetRecommendationsMoviesResponse,
+  TGetSimilarMoviesResponse,
+  IGetMovieSimilar,
 } from "./movies.types";
 
 export async function getPopularMovies(
@@ -29,6 +33,28 @@ export async function getMovieCredits(
 ): Promise<TGetMovieCreditsResponse> {
   const { data } = await imdb_movies_api.get(
     `/3/movie/${id}/credits?api_key=${IMDB_API_KEY}&language=pt-BR`
+  );
+
+  return data;
+}
+
+export async function getMovieRecommendations({
+  id,
+  page,
+}: IGetMovieRecommendations): Promise<TGetRecommendationsMoviesResponse> {
+  const { data } = await imdb_movies_api.get(
+    `/3/movie/${id}/recommendations?api_key=${IMDB_API_KEY}&language=pt-BR&page=${page}`
+  );
+
+  return data;
+}
+
+export async function getMovieSimilar({
+  id,
+  page,
+}: IGetMovieSimilar): Promise<TGetSimilarMoviesResponse> {
+  const { data } = await imdb_movies_api.get(
+    `/3/movie/${id}/similar?api_key=${IMDB_API_KEY}&language=pt-BR&page=${page}`
   );
 
   return data;
