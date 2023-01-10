@@ -3,6 +3,7 @@ import { TVariant } from "./button.types";
 
 interface IButton {
   variant: TVariant;
+  mb?: number;
 }
 
 function getBackgroundColor(variant: TVariant, theme: DefaultTheme) {
@@ -32,5 +33,11 @@ export const Container = styled.TouchableOpacity<IButton>`
     css`
       border-width: 1px;
       border-color: ${theme.colors.background_primary};
+    `}
+
+  ${({ mb }) =>
+    mb &&
+    css`
+      margin-bottom: ${mb}px;
     `}
 `;

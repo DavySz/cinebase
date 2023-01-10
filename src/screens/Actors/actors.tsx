@@ -48,7 +48,7 @@ export function Actors() {
   }, []);
 
   return (
-    <ScreenTemplate title="Atores" previousRoute="Actors">
+    <ScreenTemplate title="Atores" previousRoute="MovieDetails">
       <ScreenState
         errorRecoveryCallback={() => loadData()}
         screenState={screenState}

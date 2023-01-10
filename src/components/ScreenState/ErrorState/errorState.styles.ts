@@ -9,6 +9,8 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.shape_dark};
 
   padding: 24px;
+
+  height: 300px;
 `;
 
 export const IconWrapper = styled.View`

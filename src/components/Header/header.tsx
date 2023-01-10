@@ -13,7 +13,7 @@ export function Header({ title, previousRoute }: IHeader) {
   return (
     <Container>
       {previousRoute ? (
-        <IconWrapper onPress={() => navigation.navigate("Home")}>
+        <IconWrapper onPress={() => navigation.goBack()}>
           <Feather
             name="arrow-left"
             size={24}
