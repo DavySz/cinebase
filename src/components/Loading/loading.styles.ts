@@ -2,6 +2,7 @@ import styled, { css } from "styled-components/native";
 
 interface ILoading {
   full?: boolean;
+  minimal?: boolean;
 }
 
 export const Container = styled.ActivityIndicator<ILoading>`
@@ -15,5 +16,9 @@ export const Container = styled.ActivityIndicator<ILoading>`
       background-color: ${({ theme }) => theme.colors.shape_dark};
     `}
 
-  height: 300px;
+  ${({ minimal }) =>
+    !minimal &&
+    css`
+      height: 300px;
+    `}
 `;
