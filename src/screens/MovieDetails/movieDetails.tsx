@@ -1,6 +1,6 @@
 import { IMDB_IMAGES_BASE_URL } from "@env";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScreenTemplate } from "../../components/ScreenTemplate/screenTemplate";
 import { getMovie } from "../../services/imdb/movies/movies";
 import { TGetMovieResponse } from "../../services/imdb/movies/movies.types";
@@ -8,6 +8,7 @@ import {
   Container,
   Content,
   Gradient,
+  IconWrapper,
   ImageWrapper,
   MovieOverview,
   Row,
@@ -28,22 +29,54 @@ import { Button } from "../../components/Button/button";
 import { Tabs } from "../../components/Tabs/tabs";
 import { Recommendations } from "./Recommendations/recommendations";
 import { Similar } from "./Similar/similar";
+import {
+  addNewMovieToList,
+  deleteMovie,
+  getMoviesList,
+} from "../../services/firebase/firestore/firestore";
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export function MovieDetails() {
+  const { user } = useAuth();
   const { colors } = useTheme();
   const { navigate } = useNavigation();
   const { id } = useRoute().params as TRouteParams;
+  const [isMovieList, setIsMovieList] = useState(false);
   const [tabStatus, setTabStatus] = useState<TTabStatus>("recommendations");
   const [screenState, setScreenState] = useState<TScreenState>("loading");
+  const [headerState, setHeaderState] = useState<TScreenState>("loading");
   const [movie, setMovie] = useState<TGetMovieResponse>(
     {} as TGetMovieResponse
   );
+
+  async function verifyMovieList(movieReceived: TGetMovieResponse) {
+    try {
+      const userListMovies = await getMoviesList(user.id);
+
+      const results = userListMovies.filter(
+        (listMovie) => listMovie.id === movieReceived.id
+      );
+
+      if (results.length > 0) {
+        setMovie(Object.assign(movieReceived, { docId: results[0].docId }));
+        setIsMovieList(true);
+      } else {
+        setMovie(movieReceived);
+        setIsMovieList(false);
+      }
+
+      setHeaderState("ready");
+    } catch {
+      setHeaderState("error");
+    }
+  }
 
   async function loadData() {
     setScreenState("loading");
     try {
       const response = await getMovie(id);
-      setMovie(response);
+      await verifyMovieList(response);
+
       setScreenState("ready");
     } catch {
       setScreenState("error");
@@ -54,31 +87,15 @@ export function MovieDetails() {
     const { vote_average } = movie;
     return (
       <Row>
-        <Entypo
-          name={vote_average > 2 ? "star" : "star-outlined"}
-          size={24}
-          color={colors.start_icon}
-        />
-        <Entypo
-          name={vote_average > 4 ? "star" : "star-outlined"}
-          size={24}
-          color={colors.start_icon}
-        />
-        <Entypo
-          name={vote_average > 6 ? "star" : "star-outlined"}
-          size={24}
-          color={colors.start_icon}
-        />
-        <Entypo
-          name={vote_average > 8 ? "star" : "star-outlined"}
-          size={24}
-          color={colors.start_icon}
-        />
-        <Entypo
-          name={vote_average === 10 ? "star" : "star-outlined"}
-          size={24}
-          color={colors.start_icon}
-        />
+        {[1, 2, 3, 4, 5].map((item) => {
+          return (
+            <Entypo
+              name={vote_average >= item * 2 ? "star" : "star-outlined"}
+              color={colors.start_icon}
+              size={24}
+            />
+          );
+        })}
       </Row>
     );
   }
@@ -90,12 +107,47 @@ export function MovieDetails() {
     return `${hours} h ${minutes} m`;
   }
 
+  const handleAddNewMovieToList = useCallback(async () => {
+    try {
+      const movieAdded = Object.assign(movie, { userId: user.id });
+      await addNewMovieToList(movieAdded);
+      setIsMovieList(true);
+    } catch {
+      setIsMovieList(false);
+    }
+  }, [movie]);
+
+  const handleDeleteMovie = useCallback(async () => {
+    try {
+      await deleteMovie(movie.docId!);
+      setIsMovieList(false);
+    } catch {
+      setIsMovieList(true);
+    }
+  }, [movie]);
+
+  const renderHeaderIcon = useCallback(() => {
+    return isMovieList ? (
+      <IconWrapper onPress={() => handleDeleteMovie()}>
+        <Entypo size={24} color={colors.main} name="heart" />
+      </IconWrapper>
+    ) : (
+      <IconWrapper onPress={() => handleAddNewMovieToList()}>
+        <Entypo size={24} color={colors.main} name="heart-outlined" />
+      </IconWrapper>
+    );
+  }, [isMovieList, movie]);
+
   useEffect(() => {
     loadData();
   }, []);
 
   return (
-    <ScreenTemplate previousRoute="Home" title="Detalhes">
+    <ScreenTemplate
+      title="Detalhes"
+      previousRoute="Home"
+      icon={headerState === "ready" && renderHeaderIcon()}
+    >
       <ScreenState
         errorRecoveryCallback={() => loadData()}
         screenState={screenState}
@@ -138,8 +190,8 @@ export function MovieDetails() {
             <InfoCard
               icon={
                 <MaterialIcons
-                  name="local-movies"
                   size={32}
+                  name="local-movies"
                   color={colors.main}
                 />
               }
