@@ -67,3 +67,9 @@ export const MovieOverview = styled(Text)`
 export const TabScreen = styled.View`
   margin-top: 24px;
 `;
+
+export const IconWrapper = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+})`
+  padding: 1px;
+`;

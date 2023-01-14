@@ -9,10 +9,21 @@ export const ImageWrapper = styled.ImageBackground`
   height: 200px;
 `;
 
-export const Header = styled.View`
-  padding: 12px;
-`;
-
 export const Footer = styled.View`
   padding-top: 12px;
+  flex-direction: row;
+  align-items: center;
 `;
+
+export const TextWrapper = styled.View`
+  flex: 1;
+  margin-right: 8px;
+`;
+
+export const IconWrapper = styled.View`
+  padding: 1px;
+`;
+
+export const PressWrapper = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+})``;

@@ -60,6 +60,7 @@ export type TGetMovieResponse = {
   video: false;
   vote_average: number;
   vote_count: number;
+  docId?: string;
 };
 
 export type TGetMovieCreditsResponse = {
