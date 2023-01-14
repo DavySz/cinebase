@@ -6,7 +6,7 @@ import { ScreenState } from "../../../components/ScreenState/screenState";
 import { TScreenState } from "../../../components/ScreenState/ScreenState.types";
 import { getMovieSimilar } from "../../../services/imdb/movies/movies";
 import { TGetRecommendationsMoviesResponse } from "../../../services/imdb/movies/movies.types";
-import { CardWrapper, Container, Separator } from "./similar.styles";
+import { Container, Separator } from "./similar.styles";
 import { ISimilar } from "./similar.types";
 
 export function Similar({ id, isFocus }: ISimilar) {
@@ -51,16 +51,13 @@ export function Similar({ id, isFocus }: ISimilar) {
           similar.results.map((item) => {
             return (
               <>
-                <CardWrapper
-                  key={item.id}
+                <MovieCard
                   onPress={() => navigate("MovieDetails", { id: item.id })}
-                >
-                  <MovieCard
-                    imagePath={item.poster_path}
-                    overview={item.overview}
-                    title={item.title}
-                  />
-                </CardWrapper>
+                  imagePath={item.poster_path}
+                  overview={item.overview}
+                  title={item.title}
+                  key={item.id}
+                />
                 <Separator />
               </>
             );
