@@ -1,15 +1,15 @@
 import React from "react";
 import { Text } from "../Text/text";
-import { Container, IconWrapper } from "./header.styles";
+import { Container, GhostView, IconWrapper } from "./header.styles";
 import { IHeader } from "./header.types";
 import { Feather } from "@expo/vector-icons";
 import { useTheme } from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
-import { View } from "react-native";
 
-export function Header({ title, previousRoute }: IHeader) {
+export function Header({ title, previousRoute, icon }: IHeader) {
   const { colors } = useTheme();
   const navigation = useNavigation();
+
   return (
     <Container>
       {previousRoute ? (
@@ -21,7 +21,7 @@ export function Header({ title, previousRoute }: IHeader) {
           />
         </IconWrapper>
       ) : (
-        <View />
+        <GhostView />
       )}
       {title && (
         <Text color="background_primary" font="secondary_600" size="24">
@@ -36,7 +36,7 @@ export function Header({ title, previousRoute }: IHeader) {
           </Text>
         </Text>
       )}
-      <View />
+      {icon ? icon : <GhostView />}
     </Container>
   );
 }
