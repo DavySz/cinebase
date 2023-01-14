@@ -7,5 +7,5 @@ export interface IText extends TextProps {
   children: ReactNode;
   font: TFonts;
   color: TColors;
-  size: "8" | "12" | "16" | "20" | "24" | "48";
+  size: "8" | "12" | "16" | "20" | "24" | "32" | "48";
 }

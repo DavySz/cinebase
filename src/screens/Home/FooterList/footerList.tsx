@@ -14,7 +14,7 @@ export function FooterList({
       {footerState === "ready" && <Separator />}
       {footerState === "loading" && (
         <Wrapper>
-          <Loading />
+          <Loading minimal />
         </Wrapper>
       )}
       {footerState === "error" && (

@@ -15,6 +15,7 @@ import {
 } from "@expo-google-fonts/inter";
 import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 import { Routes } from "./src/routes/routes";
+import { AuthContextProvider } from "./src/contexts/auth/auth";
 
 export default function App() {
   SplashScreen.preventAutoHideAsync();
@@ -35,7 +36,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <ExpoStatusBar style="light" translucent />
-      <Routes />
+      <AuthContextProvider>
+        <Routes />
+      </AuthContextProvider>
     </ThemeProvider>
   );
 }
