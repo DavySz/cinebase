@@ -1,30 +1,32 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 import { Platform } from "react-native";
 import { useTheme } from "styled-components/native";
 import { Home } from "../screens/Home/home";
-import { Entypo } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { FontAwesome, Entypo } from "@expo/vector-icons";
+import { MovieList } from "../screens/MovieList/movieList";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
 export function TabRoutes() {
   const { colors } = useTheme();
 
+  const screenOptions: BottomTabNavigationOptions = {
+    headerShown: false,
+    tabBarActiveTintColor: colors.main,
+    tabBarInactiveTintColor: colors.background_primary,
+    tabBarShowLabel: false,
+    tabBarStyle: {
+      height: 78,
+      paddingVertical: Platform.OS === "ios" ? 20 : 0,
+      backgroundColor: colors.header,
+    },
+  };
+
   return (
-    <Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: colors.main,
-        tabBarInactiveTintColor: colors.background_primary,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          height: 60,
-          paddingVertical: Platform.OS === "ios" ? 20 : 0,
-          backgroundColor: colors.header,
-        },
-      }}
-      initialRouteName="Home"
-    >
+    <Navigator screenOptions={screenOptions} initialRouteName="Home">
       <Screen
         name="Home"
         component={Home}
@@ -35,11 +37,11 @@ export function TabRoutes() {
         }}
       />
       <Screen
-        name="MyList"
-        component={Home}
+        name="MovieList"
+        component={MovieList}
         options={{
           tabBarIcon: ({ color }) => (
-            <Feather name="list" size={24} color={color} />
+            <Entypo size={24} color={color} name={"heart"} />
           ),
         }}
       />
@@ -48,7 +50,7 @@ export function TabRoutes() {
         component={Home}
         options={{
           tabBarIcon: ({ color }) => (
-            <Feather name="user" size={24} color={color} />
+            <FontAwesome name="user" size={24} color={color} />
           ),
         }}
       />
