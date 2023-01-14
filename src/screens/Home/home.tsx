@@ -168,10 +168,12 @@ export function Home() {
                 onEndReached={() => loadMoreMovies()}
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={
-                  <FooterList
-                    footerState={footerListState}
-                    errorRecoveryCallback={() => loadMoreMovies()}
-                  />
+                  !search ? (
+                    <FooterList
+                      footerState={footerListState}
+                      errorRecoveryCallback={() => loadMoreMovies()}
+                    />
+                  ) : null
                 }
                 refreshControl={
                   <RefreshControl
