@@ -3,7 +3,8 @@ import { Container, DescriptionText, IconWrapper } from "./emptyState.styles";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "styled-components/native";
 import { Text } from "../../Text/text";
-export function EmptyState() {
+import { IEmptyState } from "./emptyState.types";
+export function EmptyState({ description }: IEmptyState) {
   const { colors } = useTheme();
   return (
     <Container>
@@ -23,7 +24,7 @@ export function EmptyState() {
         font="secondary_400"
         mb={16}
       >
-        Nenhuma informação foi encontrada!
+        {description ? description : "Nenhuma informação foi encontrada!"}
       </DescriptionText>
     </Container>
   );
