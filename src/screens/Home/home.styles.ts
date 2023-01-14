@@ -17,10 +17,6 @@ export const Separator = styled.View`
   height: 24px;
 `;
 
-export const CardWrapper = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-})``;
-
 export const Row = styled.View<IRow>`
   flex-direction: row;
   align-items: center;

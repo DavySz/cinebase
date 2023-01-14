@@ -1,5 +1,5 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useCallback, useState } from "react";
 import {
   FlatList,
   Keyboard,
@@ -20,13 +20,7 @@ import { TGetPopularMoviesResponse } from "../../services/imdb/movies/movies.typ
 import { getSearchMovie } from "../../services/imdb/search/search";
 import { FooterList } from "./FooterList/footerList";
 import { TFooterListState } from "./FooterList/footerList.types";
-import {
-  CardWrapper,
-  Container,
-  IconWrapper,
-  Row,
-  Separator,
-} from "./home.styles";
+import { Container, IconWrapper, Row, Separator } from "./home.styles";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "styled-components/native";
 import { createRef } from "react";
@@ -115,9 +109,11 @@ export function Home() {
     inputRef.current?.setNativeProps({ text: "" });
   }
 
-  useEffect(() => {
-    loadMovies();
-  }, [debouncedSearch]);
+  useFocusEffect(
+    useCallback(() => {
+      loadMovies();
+    }, [debouncedSearch])
+  );
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -159,15 +155,12 @@ export function Home() {
                         Populares do momento:
                       </Text>
                     )}
-                    <CardWrapper
+                    <MovieCard
                       onPress={() => navigate("MovieDetails", { id: item.id })}
-                    >
-                      <MovieCard
-                        imagePath={item.poster_path}
-                        title={item.title}
-                        overview={item.overview}
-                      />
-                    </CardWrapper>
+                      imagePath={item.poster_path}
+                      overview={item.overview}
+                      title={item.title}
+                    />
                   </>
                 )}
                 ItemSeparatorComponent={() => <Separator />}
