@@ -7,7 +7,6 @@ import {
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Input } from "../../components/Input/input";
 import MovieCard from "../../components/MovieCard/movieCard";
 import { EmptyState } from "../../components/ScreenState/EmptyState/emptyState";
 import { ScreenState } from "../../components/ScreenState/screenState";
@@ -20,7 +19,13 @@ import { TGetPopularMoviesResponse } from "../../services/imdb/movies/movies.typ
 import { getSearchMovie } from "../../services/imdb/search/search";
 import { FooterList } from "./FooterList/footerList";
 import { TFooterListState } from "./FooterList/footerList.types";
-import { Container, IconWrapper, Row, Separator } from "./home.styles";
+import {
+  Container,
+  IconWrapper,
+  Row,
+  SearchInput,
+  Separator,
+} from "./home.styles";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "styled-components/native";
 import { createRef } from "react";
@@ -120,7 +125,7 @@ export function Home() {
       <ScreenTemplate>
         <Container>
           <Row mb={16}>
-            <Input
+            <SearchInput
               placeholder="Buscar filme..."
               onChangeText={setSearch}
               ref={inputRef}
@@ -128,8 +133,8 @@ export function Home() {
             {search && (
               <IconWrapper onPress={() => cleanInput()}>
                 <AntDesign
-                  name="close"
                   size={12}
+                  name="close"
                   color={theme.colors.background_primary}
                 />
               </IconWrapper>
@@ -183,8 +188,8 @@ export function Home() {
                 }
               />
             )}
+            {screenState === "empty" && <EmptyState />}
           </ScreenState>
-          {screenState === "empty" && <EmptyState />}
         </Container>
       </ScreenTemplate>
     </TouchableWithoutFeedback>

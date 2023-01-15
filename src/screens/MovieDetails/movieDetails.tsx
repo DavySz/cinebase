@@ -92,6 +92,7 @@ export function MovieDetails() {
             <Entypo
               name={vote_average >= item * 2 ? "star" : "star-outlined"}
               color={colors.start_icon}
+              key={item}
               size={24}
             />
           );

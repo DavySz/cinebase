@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components/native";
+import { Input } from "../../components/Input/input";
 
 interface IRow {
   justify?: "space-between" | "center";
@@ -45,4 +46,8 @@ export const IconWrapper = styled.TouchableOpacity.attrs({
   padding: 8px;
 
   margin-left: 8px;
+`;
+
+export const SearchInput = styled(Input)`
+  flex: 1;
 `;

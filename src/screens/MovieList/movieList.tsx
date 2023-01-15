@@ -15,13 +15,15 @@ import { Container, IconWrapper, Separator } from "./movieList.styles";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "styled-components/native";
 import { EmptyState } from "../../components/ScreenState/EmptyState/emptyState";
+import { Toast } from "../../components/Toast/toast";
 
 export function MovieList() {
   const { user } = useAuth();
   const { colors } = useTheme();
   const { navigate } = useNavigation();
-  const [screenState, setScreenState] = useState<TScreenState>("loading");
+  const [showToast, setShowToast] = useState(false);
   const [movies, setMovies] = useState<TGetMoviesList[]>([]);
+  const [screenState, setScreenState] = useState<TScreenState>("loading");
 
   async function loadData() {
     try {
@@ -51,8 +53,8 @@ export function MovieList() {
     try {
       await deleteMovie(id);
       await loadData();
-    } catch (e) {
-      console.log(e);
+    } catch {
+      setShowToast(true);
     }
   }
 
@@ -92,6 +94,13 @@ export function MovieList() {
               showsVerticalScrollIndicator={false}
             />
           )}
+          <Toast
+            description="Ocorreu um problema ao tentar remover o filme, por favor tente novamente!"
+            onChangeVisible={() => setShowToast(false)}
+            title="Opsss, algo deu errado!"
+            visible={showToast}
+            variant="error"
+          />
         </Container>
       </ScreenState>
     </ScreenTemplate>
