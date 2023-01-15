@@ -1,4 +1,5 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   TUser,
   IAuthContext,
@@ -15,9 +16,18 @@ export const AuthContext = createContext({} as IAuthContext);
 export function AuthContextProvider({ children }: IAuthContextProvider) {
   const [user, setUser] = useState<TUser>({} as TUser);
 
-  async function getUserInfo(token: string) {
+  async function getUserFromAsyncStorage() {
+    const user = await AsyncStorage.getItem("@user");
+    return user;
+  }
+
+  async function saveUserOnAsyncStorage(user: TUser) {
+    await AsyncStorage.setItem("@user", JSON.stringify(user));
+  }
+
+  async function getGoogleUserInfo(token: string) {
     const { data } = await axios.get(
-      `${GOOGLE_USER_INFO_URL}userinfo?alt=json&access_token=${token}`
+      `${GOOGLE_USER_INFO_URL}/userinfo?alt=json&access_token=${token}`
     );
 
     const user = {
@@ -27,9 +37,15 @@ export function AuthContextProvider({ children }: IAuthContextProvider) {
       photo: data.picture,
     };
 
+    saveUserOnAsyncStorage(user);
     setUser(user);
+  }
 
-    return user;
+  async function userLogged() {
+    const userLogged = await getUserFromAsyncStorage();
+    if (userLogged) {
+      setUser(JSON.parse(userLogged));
+    }
   }
 
   async function signInWithGoogle() {
@@ -38,13 +54,23 @@ export function AuthContextProvider({ children }: IAuthContextProvider) {
     })) as TAuthorizationResponse;
 
     if (type === "success") {
-      await getUserInfo(params.access_token);
+      await getGoogleUserInfo(params.access_token);
     }
   }
+
+  async function logout() {
+    setUser({} as TUser);
+    await AsyncStorage.removeItem("@user");
+  }
+
+  useEffect(() => {
+    userLogged();
+  }, []);
 
   const values = useMemo(
     () => ({
       signInWithGoogle,
+      logout,
       user,
     }),
     [user]

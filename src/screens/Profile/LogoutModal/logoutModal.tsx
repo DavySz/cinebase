@@ -11,7 +11,7 @@ import {
 } from "./logoutModal.styles";
 import { ILogoutModal } from "./logoutModal.types";
 
-export function LogoutModal({ onClose, visible }: ILogoutModal) {
+export function LogoutModal({ onClose, visible, onAction }: ILogoutModal) {
   const { colors } = useTheme();
   return (
     <Modal
@@ -38,7 +38,7 @@ export function LogoutModal({ onClose, visible }: ILogoutModal) {
                 Cancelar
               </Text>
             </ModalButton>
-            <ModalButton borderRight color={colors.main}>
+            <ModalButton borderRight onPress={onAction} color={colors.main}>
               <Text color="background_primary" size="16" font="primary_400">
                 Sair
               </Text>

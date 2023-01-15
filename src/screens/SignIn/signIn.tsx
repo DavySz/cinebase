@@ -19,6 +19,7 @@ export function SignIn() {
     setScreenState("loading");
     try {
       await signInWithGoogle();
+      setScreenState("ready");
     } catch {
       setScreenState("error");
     }

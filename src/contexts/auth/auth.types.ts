@@ -13,6 +13,7 @@ export type TUser = {
 
 export interface IAuthContext {
   user: TUser;
+  logout: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
 }
 
