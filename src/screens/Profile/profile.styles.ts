@@ -22,3 +22,16 @@ export const IconWrapper = styled.TouchableOpacity.attrs({
 })`
   padding: 1px;
 `;
+
+export const Avatar = styled.View`
+  width: 180px;
+  height: 180px;
+  border-radius: 90px;
+
+  margin-bottom: 24px;
+
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${({ theme }) => theme.colors.header};
+`;
