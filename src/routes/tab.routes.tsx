@@ -7,6 +7,7 @@ import { useTheme } from "styled-components/native";
 import { Home } from "../screens/Home/home";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { MovieList } from "../screens/MovieList/movieList";
+import { Profile } from "../screens/Profile/profile";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -47,7 +48,7 @@ export function TabRoutes() {
       />
       <Screen
         name="Profile"
-        component={Home}
+        component={Profile}
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" size={24} color={color} />
