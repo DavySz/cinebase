@@ -8,6 +8,8 @@ import {
   TGetRecommendationsMoviesResponse,
   TGetSimilarMoviesResponse,
   IGetMovieSimilar,
+  IGetMovieReviews,
+  TGetMovieReviewsResponse,
 } from "./movies.types";
 
 export async function getPopularMovies(
@@ -57,5 +59,15 @@ export async function getMovieSimilar({
     `/3/movie/${id}/similar?api_key=${IMDB_API_KEY}&language=pt-BR&page=${page}`
   );
 
+  return data;
+}
+
+export async function getMovieReviews({
+  id,
+  page,
+}: IGetMovieReviews): Promise<TGetMovieReviewsResponse> {
+  const { data } = await imdb_movies_api.get(
+    `/3/movie/${id}/reviews?api_key=${IMDB_API_KEY}&language=pt-BR&page=${page}`
+  );
   return data;
 }

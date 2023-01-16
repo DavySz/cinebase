@@ -138,3 +138,31 @@ export type TGetSimilarMoviesResponse = {
   total_results: number;
   results: TGetRecommendationsMoviesResults[];
 };
+
+export interface IGetMovieReviews {
+  page: number;
+  id: number;
+}
+
+export type TGetMovieReviewsResults = {
+  author: string;
+  author_details: {
+    name: string;
+    username: string;
+    avatar_path: string;
+    rating: number;
+  };
+  content: string;
+  created_at: string;
+  id: string;
+  updated_at: string;
+  url: string;
+};
+
+export type TGetMovieReviewsResponse = {
+  id: number;
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: TGetMovieReviewsResults[];
+};

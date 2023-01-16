@@ -35,6 +35,7 @@ import {
   getMoviesList,
 } from "../../services/firebase/firestore/firestore";
 import { useAuth } from "../../hooks/useAuth/useAuth";
+import moment from "moment";
 
 export function MovieDetails() {
   const { user } = useAuth();
@@ -160,7 +161,7 @@ export function MovieDetails() {
             <Gradient>
               <View>{renderStars()}</View>
               <Text color="background_primary" size="20" font="secondary_600">
-                {movie.release_date}
+                {moment(movie.release_date).format("DD/MM/YYYY")}
               </Text>
             </Gradient>
           </ImageWrapper>
@@ -213,7 +214,20 @@ export function MovieDetails() {
               info={formatToBRL(movie.revenue)}
             />
             <Button
-              label="Ver atores"
+              label="reviews"
+              variant="secondary"
+              mb={24}
+              icon={
+                <MaterialIcons
+                  size={24}
+                  name="chevron-right"
+                  color={colors.background_primary}
+                />
+              }
+              onPress={() => navigate("MovieReviews", { id })}
+            />
+            <Button
+              label="atores"
               variant="secondary"
               mb={24}
               icon={
