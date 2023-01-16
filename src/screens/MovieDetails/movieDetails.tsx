@@ -213,7 +213,20 @@ export function MovieDetails() {
               info={formatToBRL(movie.revenue)}
             />
             <Button
-              label="Ver atores"
+              label="reviews"
+              variant="secondary"
+              mb={24}
+              icon={
+                <MaterialIcons
+                  size={24}
+                  name="chevron-right"
+                  color={colors.background_primary}
+                />
+              }
+              onPress={() => navigate("MovieReviews", { id })}
+            />
+            <Button
+              label="atores"
               variant="secondary"
               mb={24}
               icon={
