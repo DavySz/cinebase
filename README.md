@@ -26,6 +26,7 @@ Find your next movie or create your watchlist with this App. It include reviews,
 - [x] React Native
 - [x] Firebase
 - [x] Google Cloud Platform
+- [x] IMDB API
 - [x] Moment
 - [x] Async Storage
 ...
